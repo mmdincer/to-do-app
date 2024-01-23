@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="myDIV" class="header">
+        <h2 style="color: black; font-size: 30px;">To Do List</h2>
+        <input type="text" id="taskText" placeholder="Title...">
+        <button type="submit" class="addBtn" id="addBtn">
+            Ekle
+        </button>
+    </div>
+
+    <ul id="task-list">
+        <li></li>
+    </ul>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        "use strict";
+
+        /* Listeyi doldurma */
+        let taskList = [
+            // { "id": 1, "taskName": "Görev 1" },
+            // { "id": 2, "taskName": "Görev 2" },
+            // { "id": 3, "taskName": "Görev 3" },
+            // { "id": 4, "taskName": "Görev 4" },
+        ];
+
+        displayTasks();
+        function displayTasks()
+        {
+            let ul = document.getElementById("task-list");
+            ul.innerHTML = "";
+            for (let task of taskList) {
+
+                let li = `
+                    <li> <label for="${task.id}">${task.taskName}</label> </li>
+                `;
+
+                ul.insertAdjacentHTML("beforeend", li);
+            }
+            addButtons();
+
+        }
+
+        /* Bir elemana tıklayınca checked hale getirme */
+
+        var list = document.querySelector('ul');
+        list.addEventListener('click', function(ev) {
+        if (ev.target.tagName === 'LI') {
+            ev.target.classList.toggle('checked');
+        }
+        }, false);
+
+        /* Her elemana silme ve güncelleme butonu ekleme */
+        function addButtons() {
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+                addDeleteButton(myNodelist[i], i);
+                addUpdateButton(myNodelist[i], i);
+            }
+        }
+
+        function addDeleteButton(element, index) {
+            var spanDelete = document.createElement("SPAN");
+            var txtDelete = document.createTextNode("🗑");
+            spanDelete.className = "closeBtn";
+            spanDelete.onclick = function() {
+                taskList.splice(index, 1); 
+                displayTasks();
+            };
+            spanDelete.appendChild(txtDelete);
+            element.appendChild(spanDelete);
+        }
+
+        function addUpdateButton(element, index) {
+            var spanUpdate = document.createElement("SPAN");
+            var txtUpdate = document.createTextNode("✎");
+            spanUpdate.className = "updateBtn";
+            spanUpdate.onclick = function() {
+                taskList[index].taskName = document.querySelector("#taskText").value;
+                displayTasks();
+            };
+            spanUpdate.appendChild(txtUpdate);
+            element.appendChild(spanUpdate);
+        }
+
+
+        /* Butona basılınca listeye eleman ekleme */
+
+        document.querySelector("#addBtn").addEventListener("click", newTask);
+        document.querySelector("#addBtn").addEventListener("keypress", function(){
+            if (event.key == "Enter") {
+                document.getElementById("addBtn").click();
+            }
+        });
+
+        function newTask(event) {
+            
+            let taskInput = document.querySelector("#taskText");
+
+            if(taskInput.value == "") {
+                alert("Lütfen görev giriniz!");
+            } else {
+                taskList.push({"id": taskList.length + 1, "taskName": taskInput.value});
+                taskInput.value = "";
+                displayTasks();
+            }
+
+            event.preventDefault();
+        }   
+  
+
+    </script>
+
+</body>
+
+</html>
